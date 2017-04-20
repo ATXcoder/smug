@@ -48,6 +48,7 @@ function configure-help
 
 function prep-area
 {
+	cd /home/ubuntu/workspace
 	sudo rm hello-world.php php.ini README.md
 }
 
