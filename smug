@@ -232,6 +232,7 @@ function main
 		
 		--cloud9-set-public)
 			cloud9-set-public $3
+			;;
 			
 		--configure)
 			case "$2" in
