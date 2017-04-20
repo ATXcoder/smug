@@ -198,7 +198,7 @@ function main
 					install-laravel-installer
 					;;
 				
-				--environment
+				--environment)
 					prep-area
 					;;
 				
