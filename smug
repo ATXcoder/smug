@@ -46,6 +46,17 @@ function configure-help
 	echo -e "\t\t${TXT_FG_COLOR_GREEN}--public-index-folder${TXT_NORMAL} <folder_name>\t\t\tConfigure Cloud9's public index folder path.\n"
 }
 
+function prep-area
+{
+	sudo rm hello-world.php php.ini README.md
+}
+
+function clone-laravel-project
+{
+	cd /home/ubuntu/workspace
+	git clone $1
+}
+
 function install-php-7.0
 {
 	sudo add-apt-repository -y ppa:ondrej/php
@@ -95,6 +106,16 @@ function install-laravel-installer
 }
 
 function cloud9-set-public-index-site
+{
+	# Config 001-cloud9.conf (Apache)
+	sudo sed -r "s/DocumentRoot(.)*/DocumentRoot \/home\/ubuntu\/workspace\/${1}\/public/g" /etc/apache2/sites-available/001-cloud9.conf > 001-cloud9.conf.tmp \
+		&& sudo rm /etc/apache2/sites-available/001-cloud9.conf \
+		&& sudo mv 001-cloud9.conf.tmp /etc/apache2/sites-available/001-cloud9.conf
+		
+	echo -e "\e[32mPublic index folder '${1}/public' was set up with success!"
+}
+
+function cloud9-set-public
 {
 	# Config 001-cloud9.conf (Apache)
 	sudo sed -r "s/DocumentRoot(.)*/DocumentRoot \/home\/ubuntu\/workspace\/${1}\/public/g" /etc/apache2/sites-available/001-cloud9.conf > 001-cloud9.conf.tmp \
@@ -177,6 +198,10 @@ function main
 					install-laravel-installer
 					;;
 				
+				--environment
+					prep-area
+					;;
+				
 				*)
 					configure-help
 			esac
@@ -200,6 +225,13 @@ function main
 					configure-help
 			esac
 			;;
+			
+		--clone-laravel-project)
+			clone-laravel-project $3
+			;;
+		
+		--cloud9-set-public)
+			cloud9-set-public $3
 			
 		--configure)
 			case "$2" in
